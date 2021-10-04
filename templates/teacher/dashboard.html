@@ -1,0 +1,14 @@
+{% extends "base/base.html" %}
+{% load static %}
+{% block title %}
+  Dashboard - Teacher
+{% endblock title %}
+
+
+{% block body %}
+  <div class="container">
+    <h1 class="text-center"><i class="fa fa-dashboard" aria-hidden="true"></i>Dashboard - Teacher</h1>
+    <a href="{% url 'signout' %}"><i class="fa fa-power-off" aria-hidden="true"></i>Logout</a>
+  </div>
+{% endblock body %}
+
