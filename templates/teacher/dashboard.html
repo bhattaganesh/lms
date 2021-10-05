@@ -1,14 +1,81 @@
 {% extends "base/base.html" %}
 {% load static %}
+
 {% block title %}
   Dashboard - Teacher
 {% endblock title %}
 
 
+
+{% block site_css %}
+
+<style>
+  .bd-placeholder-img {
+    font-size: 1.125rem;
+    text-anchor: middle;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    user-select: none;
+  }
+
+  @media (min-width: 768px) {
+    .bd-placeholder-img-lg {
+      font-size: 3.5rem;
+    }
+  }
+</style>
+
+
+<!-- Custom styles for this template -->
+<link href="{% static 'assets/student-dashboard.css' %}" rel="stylesheet">
+
+{% endblock site_css %}
+  
+
+
 {% block body %}
-  <div class="container">
-    <h1 class="text-center"><i class="fa fa-dashboard" aria-hidden="true"></i>Dashboard - Teacher</h1>
-    <a href="{% url 'signout' %}"><i class="fa fa-power-off" aria-hidden="true"></i>Logout</a>
+
+
+{% include "includes/student-topnav.html" %}
+<div class="container-fluid">
+  <div class="row">
+    {% include "includes/teacher-sidenav.html" %}
+
+    <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+      {% include "includes/message.html" %}
+      
+      {% if request.path == '/user/teacher/dashboard/' %}
+        <div class="row mt-3 d-flex">
+          {% for classroom in classrooms %}
+          <div class="col-4">
+            <div class="card" style="width:18rem;">
+              <img src="{{ classroom.image.url }}" alt="{{ classroom.subject }}">
+              <div class="card-body">
+                <h5 class="card-title">{{ classroom.subject }}</h5>
+                <h6 class="card-subtitle mb-2 text-muted ">Code: {{ classroom.code }}</h6>
+                <p class="card-text"> {{classroom.description|truncatewords:20}} </p>
+                <a href="#" class="btn btn-primary">More Details</a>
+              </div>
+            </div>
+          </div>
+      {% endfor %}
+        </div>
+      {% endif %}
+        
+      {% block main %}
+        
+      {% endblock main %}
+    </main>
   </div>
+</div>
+
+  
 {% endblock body %}
+    
+{% block site_js %}
+  
+<script src="{% static 'assets/feather.min.js' %}"></script>
+<script src="{% static 'assets/student-dashboard.js' %}"></script>
+
+{% endblock site_js %}
 
