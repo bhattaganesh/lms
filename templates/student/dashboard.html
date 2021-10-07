@@ -42,47 +42,23 @@
     {% include "includes/student-sidenav.html" %}
 
     <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
-      <!-- <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-        <h1 class="h2">Dashboard</h1>
-        <div class="btn-toolbar mb-2 mb-md-0">
-          <div class="btn-group me-2">
-            <button type="button" class="btn btn-sm btn-outline-secondary">Share</button>
-            <button type="button" class="btn btn-sm btn-outline-secondary">Export</button>
-          </div>
-          <button type="button" class="btn btn-sm btn-outline-secondary dropdown-toggle">
-            <span data-feather="calendar"></span>
-            This week
-          </button>
-        </div>
-      </div>
-
-
-      <h2>Section title</h2>
-      <div class="table-responsive">
-        <table class="table table-striped table-sm">
-          <thead>
-            <tr>
-              <th scope="col">#</th>
-              <th scope="col">Header</th>
-              <th scope="col">Header</th>
-              <th scope="col">Header</th>
-              <th scope="col">Header</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>1,015</td>
-              <td>random</td>
-              <td>tabular</td>
-              <td>information</td>
-              <td>text</td>
-            </tr>
-          </tbody>
-        </table>
-      </div> -->
       {% include "includes/message.html" %}
       {% block main %}
-        
+      <div class="row mt-3 d-flex">
+        {% for classroom in classrooms %}
+        <div class="col-4">
+          <div class="card" style="width:18rem;">
+            <img src="{{ classroom.image.url }}" alt="{{ classroom.subject }}">
+            <div class="card-body">
+              <h5 class="card-title">{{ classroom.subject }}</h5>
+              <h6 class="card-subtitle mb-2 text-muted ">Code: {{ classroom.code }}</h6>
+              <p class="card-text"> {{classroom.description|truncatewords:20}} </p>
+              <a href="#" class="btn btn-primary">More Details</a>
+            </div>
+          </div>
+        </div>
+    {% endfor %}
+      </div>
       {% endblock main %}
     </main>
   </div>

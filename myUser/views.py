@@ -1,7 +1,7 @@
 from django.http.response import HttpResponse
 from django.shortcuts import redirect, render
 from django.contrib import messages
-from classroom.models import ClassRoom
+from classroom.models import ClassRoom, Enroll
 from myUser.forms import UserRegistrationForm, LoginForm
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
@@ -65,7 +65,9 @@ def signupStudent(request):
 @login_required(login_url='signin')
 def studentDashboard(request):
     if request.user.isStudent:
-        return render(request,'student/dashboard.html')
+        classroom_ids = Enroll.objects.filter(user=request.user).values_list('classroom_id', flat=True)
+        classrooms = ClassRoom.objects.filter(id__in=classroom_ids)
+        return render(request,'student/dashboard.html', {'classrooms': classrooms})
     return redirect('teacherDashboard')
 
 @login_required(login_url='signin')
