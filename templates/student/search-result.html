@@ -18,7 +18,15 @@
                     <h5 class="card-title">{{ classroom.subject }}</h5>
                     <h6 class="card-subtitle mb-2 text-muted ">Code: {{ classroom.code }}</h6>
                     <p class="card-text"> {{classroom.description|truncatewords:20}} </p>
-                    <a href="{% url 'classJoin' classroom.id %}" class="btn btn-primary">Join</a>
+                    
+                    {% if join == 'Join' %}
+                        <a href="{% url 'classJoin' classroom.id %}" class="btn btn-primary">{{ join }}</a>
+                    {% elif join == 'Requested' %}
+                        <span class="badge bg-primary">{{ join }}</span>
+                    {% else %}
+                        <span class="badge bg-success">{{ join }}</span>
+                    {% endif %}
+                        
                     </div>
                 </div>
             </div>

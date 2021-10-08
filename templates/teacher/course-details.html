@@ -38,8 +38,32 @@
                                 </tr>
                             {% endfor %}
                         </tbody>
-                      </table>
-                        
+                    </table>
+                    <h1 class="text-center p-3">Post Section</h1>
+                    <form action="{% url 'courseDetails' classroom.id %}" method="post" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        {{ form.media }}
+                        {{ form.as_p }}
+                        <button type="submit" class="btn btn-success">Save</button>
+                    </form>
+                    <h2 class="text-center p-3">Post lists</h2>
+                    <div class="container">
+                        {% for post in posts %}
+                            <div class="card card-outline-success">
+                                <div class="card-body">
+                                    <p class="card-text">{{ post.description|safe }}</p>
+                                    
+                                    {% if post.file %}
+                                        <h5 class="card-title"><a href="{{ MEDIA_URL }}{{ post.file.url }}">{{ post.file }}</a></h5>
+                                        
+                                    {% endif %}
+                                        
+                                </div>
+                            </div>
+                            <br>
+                            <br>
+                        {% endfor %}
+                    </div>
                     </div>
                 </div>
             </div>

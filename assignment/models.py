@@ -1,6 +1,7 @@
 from django.db import models
 from classroom.models import ClassRoom
 from myUser.models import User
+from ckeditor.fields import RichTextField
 
 # Create your models here.
 class Assignment(models.Model):
@@ -29,11 +30,11 @@ class Submit(models.Model):
 
 
 class  Post(models.Model):
-    title = models.CharField(max_length=200)
-    description = models.TextField(blank=True, null=True)
-    image = models.ImageField(upload_to='post/')
+    description = RichTextField(blank=True, null=True)
+    # description = models.TextField(blank=True, null=True)
+    file = models.FileField(upload_to='post-files/', blank=True, null=True)
     classroom = models.ForeignKey(ClassRoom, on_delete=models.CASCADE)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
 
     def __str__(self):
-        return self.title
+        return self.description

@@ -6,6 +6,8 @@ from classroom.forms import CreateClassromForm
 from django.contrib import messages
 
 from classroom.models import ClassRoom, Enroll
+from assignment.models import Post
+from assignment.forms import PostForm
 
 # Create your views here.
 
@@ -46,9 +48,17 @@ def classSearch(request):
         }
         try:
             classroom = get_object_or_404(ClassRoom,code=code)
-            context.update({'classroom': classroom})
+            try:
+              enroll = Enroll.objects.get(classroom=classroom,user=request.user)
+              if enroll.status:
+                  context.update({'join': 'Joined'})
+              else:
+                  context.update({'join': 'Requested'})
+            except:
+                context.update({'join': 'Join'})
         except:
             messages.add_message(request, messages.ERROR, "No such classroom found.")
+        context.update({'classroom': classroom})
         return render(request, 'student/search-result.html', context)
     else:
         return redirect('teacherDashboard')
@@ -69,7 +79,19 @@ def classJoin(request,id):
 @login_required(login_url='sigin')
 def courseDetails(request,id):
     if request.user.isTeacher:
+        form = PostForm(request.POST or None, request.FILES or None)
+        posts = Post.objects.filter(classroom_id=id)
+        if form.is_valid():
+            form = form.save(commit=False)
+            form.classroom_id = id
+            form.user_id = request.user.id 
+            form.save()
+            messages.add_message(request, messages.SUCCESS, "Posted successfully.")
+            return HttpResponseRedirect(request.META.get('HTTP_REFERER')) 
+
         context = {}
+        context.update({'form': form})
+        context.update({'posts': posts})
         try:
             classroom = ClassRoom.objects.get(id=id)
             enrolled_students = Enroll.objects.filter(classroom=classroom)
