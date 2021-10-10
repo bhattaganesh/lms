@@ -7,15 +7,19 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}
     {% endblock title %}</title>
-    <link rel="stylesheet" href="{% static 'assets/css/bootstrap.min.css' %}">
+    <link rel="stylesheet" href="{% static 'assets/plugins/bootstrap/dist/css/bootstrap.min.css' %}">
     <link rel="stylesheet" href="{% static 'assets/custom.css' %}">
+    <link rel="stylesheet" href="{% static 'assets/plugins/fontawesome/css/all.min.css' %}">
     {% block site_css %}{% endblock site_css %}
 </head>
 <body>
     {% block body %}
       
     {% endblock body %}
-    <script src="{% static 'assets/js/bootstrap.bundle.js' %}"></script>
+    <script src="{% static 'assets/plugins/jquery/dist/jquery.min.js' %}"></script>
+    <script src="{% static 'assets/plugins/popper.js/dist/umd/popper.min.js' %}"></script>
+    <script src="{% static 'assets/plugins/bootstrap/dist/js/bootstrap.min.js' %}"></script>
+    <script src="{% static 'assets/plugins/bootbox/bootbox.min.js' %}"></script>
     {% block site_js %}
       
     {% endblock site_js %}

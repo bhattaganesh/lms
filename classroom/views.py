@@ -6,8 +6,8 @@ from classroom.forms import CreateClassromForm
 from django.contrib import messages
 
 from classroom.models import ClassRoom, Enroll
-from assignment.models import Post
-from assignment.forms import PostForm
+from assignment.models import Comment, Post
+from assignment.forms import CommentForm, PostForm
 
 # Create your views here.
 
@@ -80,6 +80,8 @@ def classJoin(request,id):
 def courseDetails(request,id):
     if request.user.isTeacher:
         form = PostForm(request.POST or None, request.FILES or None)
+        comment_form = CommentForm()
+        comments = Comment.objects.all()
         posts = Post.objects.filter(classroom_id=id)
         if form.is_valid():
             form = form.save(commit=False)
@@ -91,7 +93,9 @@ def courseDetails(request,id):
 
         context = {}
         context.update({'form': form})
+        context.update({'comment_form': comment_form})
         context.update({'posts': posts})
+        context.update({'comments': comments})
         try:
             classroom = ClassRoom.objects.get(id=id)
             enrolled_students = Enroll.objects.filter(classroom=classroom)
@@ -120,3 +124,38 @@ def classroomJoinRequest(request, id):
         return HttpResponseRedirect(request.META.get('HTTP_REFERER')) 
     else:
         return redirect('studentDashboard')
+
+@login_required(login_url='signin')
+def postEdit(request, id):
+    if request.user.isTeacher:
+        post = get_object_or_404(Post,id=id)
+        form = PostForm(request.POST or None, request.FILES or None , instance=post)
+        if form.is_valid():
+            form.save()
+            messages.success(request, "Post Updated successfully.")
+            return redirect("courseDetails", post.classroom.id)
+        context = {
+            'form': form
+        }
+        return render(request, 'teacher/post-edit.html', context)
+
+@login_required(login_url='signin')
+def postDelete(request, id):
+    if request.user.isTeacher:
+        post = get_object_or_404(Post,id=id)
+        post.delete()
+        messages.success(request, 'Post deleted successfully.')
+        return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+
+
+@login_required(login_url='signin')
+def postComment(request, id):
+    commentForm = CommentForm(request.POST)
+    if commentForm.is_valid():
+        comment = commentForm.save(commit=False)
+        comment.post_id = id
+        comment.user = request.user
+        comment.save()
+        return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+    return redirect('teacherDashboard')
+

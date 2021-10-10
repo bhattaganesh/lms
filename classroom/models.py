@@ -19,3 +19,4 @@ class Enroll(models.Model):
     class Meta:
         unique_together = ('user', 'classroom')
         
+

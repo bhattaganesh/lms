@@ -51,14 +51,30 @@
                         {% for post in posts %}
                             <div class="card card-outline-success">
                                 <div class="card-body">
+                                    <span style="float: right;">
+                                        <a href="{% url 'postEdit' post.id %}" title="Edit this Post"><i class="fa fa-edit "  aria-hidden="true"></i></a>
+                                        <a href="javascript:;" onclick = "deletePost('{% url 'postDelete' post.id %}')" title="Delete this Post"><i class="fa fa-trash ml-3 post-delete"  aria-hidden="true"></i></a>
+                                    </span>
+
                                     <p class="card-text">{{ post.description|safe }}</p>
                                     
                                     {% if post.file %}
                                         <h5 class="card-title"><a href="{{ MEDIA_URL }}{{ post.file.url }}">{{ post.file }}</a></h5>
-                                        
                                     {% endif %}
-                                        
                                 </div>
+                                <h3 class="text-center">Comments</h3>
+                                <div class="container">
+                                    {% for comment in comments %}
+                                      <h5>{{ comment.user.fullName }}</h5>
+                                      <p>{{ comment.comment }}</p>
+                                      <hr>
+                                    {% endfor %}
+                                </div>
+                                <form action="{% url 'postComment' post.id %}" method="POST">
+                                    {% csrf_token %}
+                                    {{ comment_form.as_p }}
+                                    <input type="submit" value="Comment" style="float: right;" class="btn btn-primary m-3 mt-0">
+                                </form>
                             </div>
                             <br>
                             <br>
@@ -85,3 +101,30 @@
 {% endblock main %}
 
 
+{% block site_js %}
+<script>
+    function deletePost(url){
+        $(document).on("click", ".post-delete", function(e) {
+            bootbox.confirm({
+                title: "Destroy planet?",
+                message: "Do you want to activate the Deathstar now? This cannot be undone.",
+                buttons: {
+                    cancel: {
+                        label: '<i class="fa fa-times"></i> Cancel'
+                    },
+                    confirm: {
+                        label: '<i class="fa fa-check"></i> Confirm'
+                    }
+                },
+                callback: function (result) {
+                    if(result){
+                        window.location = url;
+                    }
+                }
+            });
+        });
+    
+    }
+
+</script>
+{% endblock site_js %}
